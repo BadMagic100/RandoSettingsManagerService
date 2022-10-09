@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32922.545
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandoSettingsManagerService", "RandoSettingsManagerService\RandoSettingsManagerService.csproj", "{7422A217-1A50-47BE-A734-38307EF085B6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandoSettingsManagerServiceCDK", "RandoSettingsManagerServiceCDK\RandoSettingsManagerServiceCDK.csproj", "{1AC1965B-B0B9-42B0-8300-58F1B6E1FAAC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7422A217-1A50-47BE-A734-38307EF085B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7422A217-1A50-47BE-A734-38307EF085B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7422A217-1A50-47BE-A734-38307EF085B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7422A217-1A50-47BE-A734-38307EF085B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AC1965B-B0B9-42B0-8300-58F1B6E1FAAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AC1965B-B0B9-42B0-8300-58F1B6E1FAAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AC1965B-B0B9-42B0-8300-58F1B6E1FAAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AC1965B-B0B9-42B0-8300-58F1B6E1FAAC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A258C63F-23C6-4A46-9C0D-A38739A06573}
+	EndGlobalSection
+EndGlobal
