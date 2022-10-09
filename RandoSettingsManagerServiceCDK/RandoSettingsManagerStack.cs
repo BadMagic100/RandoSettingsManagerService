@@ -27,23 +27,23 @@ namespace RandoSettingsManagerServiceCDK
                 "export DOTNET_CLI_HOME=\"/tmp/DOTNET_CLI_HOME\"",
                 "export PATH=\"$PATH:/tmp/DOTNET_CLI_HOME/.dotnet/tools\"",
                 "dotnet tool install -g Amazon.Lambda.Tools",
-                "dotnet lambda package -o output.zip",
-                "unzip -o -d /asset-output output.zip"
+                "dotnet lambda package -o bin/Publish/package.zip",
+                "unzip -o -d /asset-output bin/Publish/package.zip"
             };
 
             Function createSettings = new(this, "SettingsManagerLambda", new FunctionProps
             {
                 Runtime = Runtime.DOTNET_6,
-                Code = Code.FromAsset("../RandoSettingsManagerService/bin/Publish/package.zip", new Amazon.CDK.AWS.S3.Assets.AssetOptions
+                Code = Code.FromAsset("../RandoSettingsManagerService", new Amazon.CDK.AWS.S3.Assets.AssetOptions
                 {
-                    //Bundling = new BundlingOptions
-                    //{
-                    //    Image = Runtime.DOTNET_6.BundlingImage,
-                    //    Command = new[]
-                    //    {
-                    //        "bash", "-c", string.Join(" && ", bundlingCommands)
-                    //    }
-                    //}
+                    Bundling = new BundlingOptions
+                    {
+                        Image = Runtime.DOTNET_6.BundlingImage,
+                        Command = new[]
+                        {
+                            "bash", "-c", string.Join(" && ", bundlingCommands)
+                        }
+                    }
                 }),
                 Handler = "RandoSettingsManagerService::RandoSettingsManagerService.Handlers::FunctionHandler",
                 FunctionName = "ManageSettings",
