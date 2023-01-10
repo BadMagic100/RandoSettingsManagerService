@@ -28,37 +28,45 @@ public class Handlers
 
     public async Task<APIGatewayHttpApiV2ProxyResponse> FunctionHandler(APIGatewayHttpApiV2ProxyRequest input, ILambdaContext context)
     {
-        if (input.RequestContext.Http.Method == "POST")
+        try
         {
-            if (TryParseInput(input.Body, out CreateSettingsInput? csi) && csi != null && csi.Settings != null)
+            if (input.RequestContext.Http.Method == "POST")
             {
-                if (!IsBase64(csi.Settings))
+                if (TryParseInput(input.Body, out CreateSettingsInput? csi) && csi != null && csi.Settings != null)
+                {
+                    if (!IsBase64(csi.Settings))
+                    {
+                        return RespondError(HttpStatusCode.BadRequest);
+                    }
+                    CreateSettingsOutput output = await CreateSettings(csi, context);
+                    return RespondOK(output);
+                }
+                else
                 {
                     return RespondError(HttpStatusCode.BadRequest);
                 }
-                CreateSettingsOutput output = await CreateSettings(csi, context);
-                return RespondOK(output);
+            }
+            else if (input.RequestContext.Http.Method == "GET")
+            {
+                if (TryParseInput(JsonSerializer.Serialize(input.QueryStringParameters), out RetrieveSettingsInput? rsi) && rsi != null && rsi.SettingsKey != null)
+                {
+                    RetrieveSettingsOutput output = await RetrieveSettings(rsi, context);
+                    return RespondOK(output);
+                }
+                else
+                {
+                    return RespondError(HttpStatusCode.BadRequest);
+                }
             }
             else
             {
-                return RespondError(HttpStatusCode.BadRequest);
+                return RespondError(HttpStatusCode.MethodNotAllowed);
             }
         }
-        else if (input.RequestContext.Http.Method == "GET")
+        catch (Exception ex)
         {
-            if (TryParseInput(JsonSerializer.Serialize(input.QueryStringParameters), out RetrieveSettingsInput? rsi) && rsi != null && rsi.SettingsKey != null)
-            {
-                RetrieveSettingsOutput output = await RetrieveSettings(rsi, context);
-                return RespondOK(output);
-            }
-            else
-            {
-                return RespondError(HttpStatusCode.BadRequest);
-            }
-        }
-        else
-        {
-            return RespondError(HttpStatusCode.MethodNotAllowed);
+            context.Logger.LogError($"Unknown error caught in top-level handler: {ex}");
+            return RespondError(HttpStatusCode.InternalServerError);
         }
     }
 
@@ -93,6 +101,7 @@ public class Handlers
 
     public async Task<CreateSettingsOutput> CreateSettings(CreateSettingsInput input, ILambdaContext context)
     {
+        context.Logger.LogInformation($"Beginning create settings request. Encoded settings are \"{input.Settings}\"");
         long timestamp = DateTimeOffset.UtcNow.AddDays(1).ToUnixTimeSeconds();
         string id = Guid.NewGuid().ToString();
         await ctx.SaveAsync(new SettingsRecord()
@@ -106,6 +115,7 @@ public class Handlers
 
     public async Task<RetrieveSettingsOutput> RetrieveSettings(RetrieveSettingsInput input, ILambdaContext context)
     {
+        context.Logger.LogInformation($"Beginning retrieve settings request. Key is \"{input.SettingsKey}\"");
         SettingsRecord? record = await ctx.LoadAsync<SettingsRecord>(input.SettingsKey);
         RetrieveSettingsOutput output = new();
         if (record != null && record.Data != null)
