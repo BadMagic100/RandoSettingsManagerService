@@ -13,6 +13,8 @@ namespace RandoSettingsManagerService;
 
 public class Handlers
 {
+    private const int TTL_DAYS = 14;
+
     private static AmazonDynamoDBClient client = new();
     public static DynamoDBContext ctx = new(client);
 
@@ -48,7 +50,8 @@ public class Handlers
             }
             else if (input.RequestContext.Http.Method == "GET")
             {
-                if (TryParseInput(JsonSerializer.Serialize(input.QueryStringParameters), out RetrieveSettingsInput? rsi) && rsi != null && rsi.SettingsKey != null)
+                if (TryParseInput(JsonSerializer.Serialize(input.QueryStringParameters), out RetrieveSettingsInput? rsi) 
+                    && rsi != null && !string.IsNullOrWhiteSpace(rsi.SettingsKey))
                 {
                     RetrieveSettingsOutput output = await RetrieveSettings(rsi, context);
                     return RespondOK(output);
@@ -102,7 +105,7 @@ public class Handlers
     public async Task<CreateSettingsOutput> CreateSettings(CreateSettingsInput input, ILambdaContext context)
     {
         context.Logger.LogInformation($"Beginning create settings request. Encoded settings are \"{input.Settings}\"");
-        long timestamp = DateTimeOffset.UtcNow.AddDays(1).ToUnixTimeSeconds();
+        long timestamp = DateTimeOffset.UtcNow.AddDays(TTL_DAYS).ToUnixTimeSeconds();
         string id = Guid.NewGuid().ToString();
         await ctx.SaveAsync(new SettingsRecord()
         {
