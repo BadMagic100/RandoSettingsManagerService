@@ -53,8 +53,20 @@ public class Handlers
                 if (TryParseInput(JsonSerializer.Serialize(input.QueryStringParameters), out RetrieveSettingsInput? rsi) 
                     && rsi != null && !string.IsNullOrWhiteSpace(rsi.SettingsKey))
                 {
-                    RetrieveSettingsOutput output = await RetrieveSettings(rsi, context);
-                    return RespondOK(output);
+                    try
+                    {
+                        RetrieveSettingsOutput output = await RetrieveSettings(rsi, context);
+                        return RespondOK(output);
+                    }
+                    catch (AmazonDynamoDBException ddbe)
+                    {
+                        if (ddbe.StatusCode == HttpStatusCode.BadRequest)
+                        {
+                            context.Logger.LogWarning($"Caught 400 error during GET execution, this is likely due to caller error. {ddbe}");
+                            return RespondError(HttpStatusCode.BadRequest);
+                        }
+                        throw;
+                    }
                 }
                 else
                 {
