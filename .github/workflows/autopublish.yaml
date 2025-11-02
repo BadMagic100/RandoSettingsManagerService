@@ -41,6 +41,8 @@ jobs:
         with:
           role-to-assume: ${{ secrets.CDK_ROLE }}
           aws-region: ${{ secrets.AWS_REGION }}
+          role-session-name: ${{ github.run_id }}
+          mask-aws-account-id: true
       - name: Deploy
         run: cdk deploy --require-approval never
         working-directory: RandoSettingsManagerServiceCDK
