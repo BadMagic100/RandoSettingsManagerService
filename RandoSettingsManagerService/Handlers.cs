@@ -16,7 +16,7 @@ public class Handlers
     private const int TTL_DAYS = 14;
 
     private static AmazonDynamoDBClient client = new();
-    public static DynamoDBContext ctx = new(client);
+    public static DynamoDBContext ctx = new DynamoDBContextBuilder().WithDynamoDBClient(() => client).Build();
 
     private bool IsBase64(string s)
     {
