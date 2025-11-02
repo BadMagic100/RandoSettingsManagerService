@@ -1,0 +1,46 @@
+name: Autopublish
+on:
+  push:
+    branches: [ master ]
+
+permissions:
+  actions: read
+  id-token: write
+
+concurrency:
+  group: deployment
+  cancel-in-progress: false
+
+jobs:
+  autopublish:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: Deployment
+
+    steps:
+      # Set up workspace
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+      - name: Setup Node
+        uses: actions/setup-node@v6
+      - name: Install CDK CLI
+        run: npm install -g aws-cdk
+
+
+      # Build
+      - name: Build
+        run: dotnet build
+
+      # Deploy
+      - name: Configure AWS
+        # this action has immutable releases so we get a better security guarantee by pinning the minor version
+        uses: aws-actions/configure-aws-credentials@v5.1.0
+        with:
+          role-to-assume: ${{ secrets.CDK_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Deploy
+        run: cdk deploy --require-approval never
+        working-directory: RandoSettingsManagerServiceCDK
