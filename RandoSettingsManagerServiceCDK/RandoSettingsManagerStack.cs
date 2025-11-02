@@ -3,6 +3,7 @@ using Amazon.CDK.AWS.CloudWatch;
 using Amazon.CDK.AWS.CloudWatch.Actions;
 using Amazon.CDK.AWS.DynamoDB;
 using Amazon.CDK.AWS.Lambda;
+using Amazon.CDK.AWS.Logs;
 using Amazon.CDK.AWS.SNS;
 using Constructs;
 
@@ -30,28 +31,33 @@ namespace RandoSettingsManagerServiceCDK
                 "export DOTNET_CLI_HOME=\"/tmp/DOTNET_CLI_HOME\"",
                 "export PATH=\"$PATH:/tmp/DOTNET_CLI_HOME/.dotnet/tools\"",
                 "dotnet tool install -g Amazon.Lambda.Tools",
-                "dotnet lambda package -o bin/Publish/package.zip",
+                "dotnet lambda package -o bin/Publish/package.zip -c Release",
                 "unzip -o -d /asset-output bin/Publish/package.zip"
             };
 
+            LogGroup settingsManagerLogGroup = new(this, "SettingsManagerLogGroup", new LogGroupProps
+            {
+                LogGroupName = "SettingsManager-LogGroup",
+                Retention = RetentionDays.THREE_MONTHS,
+            });
             Function createSettings = new(this, "SettingsManagerLambda", new FunctionProps
             {
-                Runtime = Runtime.DOTNET_6,
+                Runtime = Runtime.DOTNET_8,
                 Code = Code.FromAsset("../RandoSettingsManagerService", new Amazon.CDK.AWS.S3.Assets.AssetOptions
                 {
                     Bundling = new BundlingOptions
                     {
-                        Image = Runtime.DOTNET_6.BundlingImage,
-                        Command = new[]
-                        {
+                        Image = Runtime.DOTNET_8.BundlingImage,
+                        Command =
+                        [
                             "bash", "-c", string.Join(" && ", bundlingCommands)
-                        }
+                        ]
                     }
                 }),
                 Handler = "RandoSettingsManagerService::RandoSettingsManagerService.Handlers::FunctionHandler",
                 FunctionName = "ManageSettings",
                 Timeout = Duration.Seconds(30),
-                LogRetention = Amazon.CDK.AWS.Logs.RetentionDays.THREE_MONTHS,
+                LogGroup = settingsManagerLogGroup,
             });
 
             Topic alarmTopic = new(this, "AlarmTopic", new TopicProps

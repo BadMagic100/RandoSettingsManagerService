@@ -50,7 +50,7 @@ public class Handlers
             }
             else if (input.RequestContext.Http.Method == "GET")
             {
-                if (TryParseInput(JsonSerializer.Serialize(input.QueryStringParameters), out RetrieveSettingsInput? rsi) 
+                if (TryParseInput(JsonSerializer.Serialize(input.QueryStringParameters), out RetrieveSettingsInput? rsi)
                     && rsi != null && !string.IsNullOrWhiteSpace(rsi.SettingsKey))
                 {
                     try

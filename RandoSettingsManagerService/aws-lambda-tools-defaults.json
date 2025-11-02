@@ -1,7 +1,7 @@
 {
   "region": "us-west-2",
   "configuration": "Release",
-  "function-runtime": "dotnet6",
+  "function-runtime": "dotnet8",
   "function-memory-size": 256,
   "function-timeout": 30,
   "function-handler": "RandoSettingsManagerService::RandoSettingsManagerService.Handlers::FunctionHandler"
