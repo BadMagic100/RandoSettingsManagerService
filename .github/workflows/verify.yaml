@@ -24,9 +24,6 @@ jobs:
       # Build
       - name: Build
         run: dotnet build
-      - name: Synth
-        run: cdk synth
-        working-directory: RandoSettingsManagerServiceCDK
 
       # Diff
       - name: Configure AWS
@@ -38,6 +35,9 @@ jobs:
           role-session-name: ${{ github.run_id }}
           role-duration-seconds: 1800
           mask-aws-account-id: true
+      - name: Synth
+        run: cdk synth
+        working-directory: RandoSettingsManagerServiceCDK
       - name: Diff
         uses: corymhall/cdk-diff-action@v2
         with:
