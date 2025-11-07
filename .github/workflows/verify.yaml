@@ -39,9 +39,6 @@ jobs:
       - name: Synth
         run: cdk synth
         working-directory: RandoSettingsManagerServiceCDK
-      - name: Diff Sad
-        run: cdk diff -v --app cdk.out
-        working-directory: RandoSettingsManagerServiceCDK
       - name: Diff
         uses: corymhall/cdk-diff-action@v2
         with:
