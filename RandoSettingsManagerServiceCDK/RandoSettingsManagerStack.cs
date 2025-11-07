@@ -26,15 +26,15 @@ namespace RandoSettingsManagerServiceCDK
                 TableName = "QuickShareSettingsStore",
             });
 
-            IEnumerable<string> bundlingCommands = new[]
-            {
+            IEnumerable<string> bundlingCommands =
+            [
                 "cd /asset-input",
                 "export DOTNET_CLI_HOME=\"/tmp/DOTNET_CLI_HOME\"",
                 "export PATH=\"$PATH:/tmp/DOTNET_CLI_HOME/.dotnet/tools\"",
                 "dotnet tool install -g Amazon.Lambda.Tools",
                 "dotnet lambda package -o bin/Publish/package.zip -c Release",
                 "unzip -o -d /asset-output bin/Publish/package.zip"
-            };
+            ];
 
             LogGroup settingsManagerLogGroup = new(this, "SettingsManagerLogGroup", new LogGroupProps
             {
