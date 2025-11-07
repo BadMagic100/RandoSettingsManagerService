@@ -40,7 +40,7 @@ jobs:
         run: cdk synth
         working-directory: RandoSettingsManagerServiceCDK
       - name: Diff Sad
-        run: cdk diff -v --app cdk.out
+        run: cdk diff -v --app cdk.out --role-arn ${{ secrets.CDK_DIFF_ONLY_ROLE }}
         working-directory: RandoSettingsManagerServiceCDK
       - name: Diff
         uses: corymhall/cdk-diff-action@v2
