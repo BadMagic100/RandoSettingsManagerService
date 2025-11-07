@@ -1,22 +1,15 @@
-name: Autopublish
+name: Verify
 on:
-  push:
+  pull_request:
     branches: [ master ]
 
 permissions:
   actions: read
   id-token: write
 
-concurrency:
-  group: deployment
-  cancel-in-progress: false
-
 jobs:
   autopublish:
     runs-on: ubuntu-latest
-
-    environment:
-      name: Deployment
 
     steps:
       # Set up workspace
@@ -33,17 +26,22 @@ jobs:
       # Build
       - name: Build
         run: dotnet build
+      - name: Synth
+        run: cdk synth
+        working-directory: RandoSettingsManagerServiceCDK
 
-      # Deploy
+      # Diff
       - name: Configure AWS
         # this action has immutable releases so we get a better security guarantee by pinning the minor version
         uses: aws-actions/configure-aws-credentials@v5.1.0
         with:
-          role-to-assume: ${{ secrets.CDK_ROLE }}
+          role-to-assume: ${{ secrets.CDK_DIFF_ONLY_ROLE }}
           aws-region: ${{ secrets.AWS_REGION }}
           role-session-name: ${{ github.run_id }}
           role-duration-seconds: 1800
           mask-aws-account-id: true
-      - name: Deploy
-        run: cdk deploy --require-approval never
-        working-directory: RandoSettingsManagerServiceCDK
+      - name: Diff
+        uses: corymhall/cdk-diff-action@v2
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          cdkOutDir: RandoSettingsManagerServiceCDK/cdk.out
