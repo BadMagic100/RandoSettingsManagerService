@@ -7,8 +7,30 @@ permissions:
   id-token: write
 
 jobs:
-  verify:
+  preliminary-build:
     runs-on: ubuntu-latest
+    steps:
+      # Set up workspace
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+      - name: Setup Node
+        uses: actions/setup-node@v6
+      - name: Install CDK CLI
+        run: npm install -g aws-cdk
+
+
+      # Build
+      - name: Build
+        run: dotnet build
+      - name: Synth
+        run: cdk synth
+        working-directory: RandoSettingsManagerServiceCDK
+  diff:
+    runs-on: ubuntu-latest
+
+    environment: Test
 
     steps:
       # Set up workspace
