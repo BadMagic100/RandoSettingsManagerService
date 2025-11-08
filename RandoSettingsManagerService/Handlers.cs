@@ -13,7 +13,7 @@ namespace RandoSettingsManagerService;
 
 public class Handlers
 {
-    private const int TTL_DAYS = 14;
+    private const int TTL_DAYS = 15;
 
     private static AmazonDynamoDBClient client = new();
     public static DynamoDBContext ctx = new DynamoDBContextBuilder().WithDynamoDBClient(() => client).Build();
