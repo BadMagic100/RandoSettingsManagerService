@@ -1,11 +1,31 @@
 version: 2
 
 updates:
- - package-ecosystem: "nuget"
-   directory: "/"
-   schedule:
-     interval: "daily"
- - package-ecosystem: "github-actions"
-   directory: "/"
-   schedule:
-     interval: "daily"
+  - package-ecosystem: "nuget"
+    directory: "/RandoSettingsManagerService"
+    schedule:
+      interval: "daily"
+    groups:
+      Lambda:
+        patterns:
+          - "Amazon.Lambda.*"
+      AWS SDK:
+        patterns:
+          - "AWSSDK.*"
+        exclude-patterns:
+          - "AWSSDK.SSO*"
+      Dev Dependencies:
+        patterns:
+          - "AWSSDK.SSO*"
+  - package-ecosystem: "nuget"
+    directory: "/RandoSettingsManagerServiceCDK"
+    schedule:
+      interval: "daily"
+    groups:
+      Dependencies:
+        patterns:
+          - "*"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
