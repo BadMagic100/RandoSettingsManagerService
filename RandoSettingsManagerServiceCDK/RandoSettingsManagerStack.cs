@@ -14,7 +14,7 @@ namespace RandoSettingsManagerServiceCDK
         internal RandoSettingsManagerStack(Construct scope, string id, IStackProps? props = null) : base(scope, id, props)
         {
 
-            Table_ quickShareSettingsStore = new(this, "QuickShareSettingsStore", new TableProps
+            Table quickShareSettingsStore = new(this, "QuickShareSettingsStore", new TableProps
             {
                 PartitionKey = new Amazon.CDK.AWS.DynamoDB.Attribute
                 {
