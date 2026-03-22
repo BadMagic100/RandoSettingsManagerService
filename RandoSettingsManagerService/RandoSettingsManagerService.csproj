@@ -19,7 +19,7 @@
 
   <!-- Include SSO support in debug builds to use local creds -->
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-    <PackageReference Include="AWSSDK.SSO" Version="4.0.2.16"/>
+    <PackageReference Include="AWSSDK.SSO" Version="4.0.2.17"/>
     <PackageReference Include="AWSSDK.SSOOIDC" Version="4.0.3.17"/>
   </ItemGroup>
 </Project>
