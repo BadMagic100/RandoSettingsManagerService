@@ -9,7 +9,7 @@ updates:
       Lambda:
         patterns:
           - "Amazon.Lambda.*"
-      AWS SDK:
+      AWSSDK:
         patterns:
           - "AWSSDK.*"
   - package-ecosystem: "nuget"
