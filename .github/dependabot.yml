@@ -7,11 +7,17 @@ updates:
       interval: "weekly"
     groups:
       Lambda:
-        applies-to: all
+        patterns:
+          - "Amazon.Lambda.*"
+      Lambda-security:
+        applies-to: security-updates
         patterns:
           - "Amazon.Lambda.*"
       AWSSDK:
-        applies-to: all
+        patterns:
+          - "AWSSDK.*"
+      AWSSDK-security:
+        applies-to: security-updates
         patterns:
           - "AWSSDK.*"
   - package-ecosystem: "nuget"
