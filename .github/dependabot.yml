@@ -6,18 +6,10 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      Lambda:
+      lambda:
         patterns:
           - "Amazon.Lambda.*"
-      Lambda-security:
-        applies-to: security-updates
-        patterns:
-          - "Amazon.Lambda.*"
-      AWSSDK:
-        patterns:
-          - "AWSSDK.*"
-      AWSSDK-security:
-        applies-to: security-updates
+      aws-sdk:
         patterns:
           - "AWSSDK.*"
   - package-ecosystem: "nuget"
@@ -25,7 +17,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      Dependencies:
+      dependencies:
         patterns:
           - "*"
   - package-ecosystem: "github-actions"
