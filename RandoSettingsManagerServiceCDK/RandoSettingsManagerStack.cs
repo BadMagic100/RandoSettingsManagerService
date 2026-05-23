@@ -43,12 +43,12 @@ namespace RandoSettingsManagerServiceCDK
             });
             Function createSettings = new(this, "SettingsManagerLambda", new FunctionProps
             {
-                Runtime = Runtime.DOTNET_8,
+                Runtime = Runtime.DOTNET_10,
                 Code = Code.FromAsset("../RandoSettingsManagerService", new Amazon.CDK.AWS.S3.Assets.AssetOptions
                 {
                     Bundling = new BundlingOptions
                     {
-                        Image = Runtime.DOTNET_8.BundlingImage,
+                        Image = Runtime.DOTNET_10.BundlingImage,
                         Command =
                         [
                             "bash", "-c", string.Join(" && ", bundlingCommands)
