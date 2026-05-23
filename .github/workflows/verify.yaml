@@ -3,44 +3,20 @@ on: pull_request
 
 permissions:
   contents: read
-  pull-requests: write
-  id-token: write
 
 jobs:
-  diff:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       # Set up workspace
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
-      - name: Setup Node
-        uses: actions/setup-node@v6
-      - name: Install CDK CLI
-        run: npm install -g aws-cdk
-
 
       # Build
       - name: Build
         run: dotnet build
-
-      # Diff
-      - name: Configure AWS
-        # this action has immutable releases so we get a better security guarantee by pinning the minor version
-        uses: aws-actions/configure-aws-credentials@v6.1.1
-        with:
-          role-to-assume: ${{ secrets.CDK_DIFF_ONLY_ROLE }}
-          aws-region: ${{ secrets.AWS_REGION }}
-          role-session-name: ${{ github.run_id }}
-          role-duration-seconds: 1800
-          mask-aws-account-id: true
-      - name: Synth
-        run: cdk synth
-        working-directory: RandoSettingsManagerServiceCDK
-      - name: Diff
-        uses: corymhall/cdk-diff-action@v2
-        with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          cdkOutDir: RandoSettingsManagerServiceCDK/cdk.out
