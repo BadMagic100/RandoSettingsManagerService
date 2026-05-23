@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="RandoSettingsManagerService/RandoSettingsManagerService.csproj" />
+  <Project Path="RandoSettingsManagerServiceCDK/RandoSettingsManagerServiceCDK.csproj" />
+</Solution>
