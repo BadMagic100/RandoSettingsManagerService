@@ -1,0 +1,60 @@
+name: Privileged Verify
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+concurrency:
+  group: privileged-verify
+  cancel-in-progress: false
+
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    environment:
+      name: Test
+
+    steps:
+      # This job is intentionally environment-gated so every privileged run
+      # requires explicit maintainer approval before any PR code is checked out.
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+          persist-credentials: false
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+      - name: Setup Node
+        uses: actions/setup-node@v6
+      - name: Install CDK CLI
+        run: npm install -g aws-cdk
+
+      # Build
+      - name: Build
+        run: dotnet build
+
+      # Diff
+      - name: Configure AWS
+        # this action has immutable releases so we get a better security guarantee by pinning the minor version
+        uses: aws-actions/configure-aws-credentials@v6.1.1
+        with:
+          role-to-assume: ${{ secrets.CDK_DIFF_ONLY_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-session-name: ${{ github.run_id }}
+          role-duration-seconds: 1800
+          mask-aws-account-id: true
+      - name: Synth
+        run: cdk synth
+        working-directory: RandoSettingsManagerServiceCDK
+      - name: Diff
+        uses: corymhall/cdk-diff-action@v2
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          cdkOutDir: RandoSettingsManagerServiceCDK/cdk.out
