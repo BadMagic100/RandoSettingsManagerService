@@ -22,8 +22,9 @@ jobs:
       - name: Approve
         env:
           RUN_ID: ${{ github.event.workflow_run.id }}
-          ENV_ID: ${{ steps.env-id.outputs.env-id }}
         run: |-
           gh api --method POST \
             repos/${{ github.repository }}/actions/runs/${RUN_ID}/pending_deployments \
-            --input '{"environment_ids": [${ENV_ID}], "state": "approved", "comment": "Auto-approved trusted actor by workflow"}'
+            -F 'environment_ids[]=${{ steps.env-id.outputs.env-id }}' \
+            -F 'state=approved' \
+            -F 'comment=Auto-approved trusted actor by workflow'
