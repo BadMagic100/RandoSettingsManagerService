@@ -12,9 +12,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: privileged-verify
-  cancel-in-progress: false
-  queue: max
+  group: privileged-verify-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   diff:
