@@ -14,12 +14,12 @@
     <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="3.0.0" />
     <PackageReference Include="Amazon.Lambda.Core" Version="3.2.0" />
     <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="3.0.0" />
-    <PackageReference Include="AWSSDK.DynamoDBv2" Version="4.0.101.3" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="4.0.102" />
   </ItemGroup>
 
   <!-- Include SSO support in debug builds to use local creds -->
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-    <PackageReference Include="AWSSDK.SSO" Version="4.0.100.5"/>
-    <PackageReference Include="AWSSDK.SSOOIDC" Version="4.0.100.5"/>
+    <PackageReference Include="AWSSDK.SSO" Version="4.0.100.6"/>
+    <PackageReference Include="AWSSDK.SSOOIDC" Version="4.0.100.6"/>
   </ItemGroup>
 </Project>
