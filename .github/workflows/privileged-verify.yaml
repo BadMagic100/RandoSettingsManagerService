@@ -43,7 +43,7 @@ jobs:
       # Diff
       - name: Configure AWS
         # this action has immutable releases so we get a better security guarantee by pinning the minor version
-        uses: aws-actions/configure-aws-credentials@6.2.2
+        uses: aws-actions/configure-aws-credentials@v6.2.3
         with:
           role-to-assume: ${{ secrets.CDK_DIFF_ONLY_ROLE }}
           aws-region: ${{ secrets.AWS_REGION }}
